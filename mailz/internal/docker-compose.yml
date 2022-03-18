@@ -1,0 +1,14 @@
+version: '3'
+services:
+  mailhog:
+    image: 'mailhog/mailhog:${MAILHOG_VERSION}'
+    ports:
+      - '${MAILHOG_SMTP_PORT}:${MAILHOG_SMTP_PORT}'
+      - '${MAILHOG_UI_PORT}:${MAILHOG_UI_PORT}'
+    environment:
+      MH_HOSTNAME: 'localhost'
+      MH_STORAGE: 'memory'
+      MH_SMTP_BIND_ADDR: '0.0.0.0:${MAILHOG_SMTP_PORT}'
+      MH_UI_BIND_ADDR: '0.0.0.0:${MAILHOG_UI_PORT}'
+      MH_API_BIND_ADDR: '0.0.0.0:${MAILHOG_UI_PORT}'
+    restart: 'unless-stopped'
