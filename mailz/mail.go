@@ -7,10 +7,10 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	awssesv2 "github.com/aws/aws-sdk-go-v2/service/sesv2"
-	"github.com/go-playground/validator/v10"
 	"github.com/ibrt/golang-bites/numeric/uint16z"
 	"github.com/ibrt/golang-errors/errorz"
 	"github.com/ibrt/golang-inject/injectz"
+	"github.com/ibrt/golang-validation/vz"
 	"gopkg.in/mail.v2"
 )
 
@@ -26,14 +26,17 @@ var (
 	_ Mail        = &mailSMTPImpl{}
 	_ Mail        = &mailSESImpl{}
 	_ ContextMail = &contextMailImpl{}
-
-	validate = validator.New()
 )
 
 // SMTPConfig describes the configuration for the SMTP Mail implementation.
 type SMTPConfig struct {
-	URL              string `json:"url" validate:"required,url"`
-	ConnectTimeoutMS uint32 `json:"connectTimeoutMs" validate:"required"`
+	URL                   string `json:"url" validate:"required,url"`
+	ConnectTimeoutSeconds uint32 `json:"connectTimeoutSeconds" validate:"required"`
+}
+
+// Validate implements the vz.Validator interface.
+func (c *SMTPConfig) Validate() error {
+	return errorz.MaybeWrap(vz.ValidateStruct(c), errorz.SkipPackage())
 }
 
 // ParseURL parses the URL.
@@ -62,6 +65,11 @@ func NewSMTPConfigSingletonInjector(cfg *SMTPConfig) injectz.Injector {
 // SESConfig describes the configuration for the SES Mail implementation.
 type SESConfig struct {
 	AWSConfig *aws.Config `json:"-" validate:"required"`
+}
+
+// Validate implements the vz.Validator interface.
+func (c *SESConfig) Validate() error {
+	return errorz.MaybeWrap(vz.ValidateStruct(c), errorz.SkipPackage())
 }
 
 // NewSESConfigSingletonInjector always inject the given SESConfig.
@@ -123,13 +131,13 @@ func (m *contextMailImpl) Send(message *Message) error {
 // SMTPInitializer is a Mail initializer which provides a default implementation using SMTP.
 func SMTPInitializer(ctx context.Context) (injectz.Injector, injectz.Releaser) {
 	cfg := ctx.Value(mailSMTPConfigContextKey).(*SMTPConfig)
-	errorz.MaybeMustWrap(validate.Struct(cfg), errorz.Skip())
+	errorz.MaybeMustWrap(cfg.Validate(), errorz.SkipPackage())
 
 	username, password, host, port, err := cfg.ParseURL()
 	errorz.MaybeMustWrap(err, errorz.Skip())
 
 	dialer := mail.NewDialer(host, int(port), username, password)
-	dialer.Timeout = time.Duration(cfg.ConnectTimeoutMS) * time.Millisecond
+	dialer.Timeout = time.Duration(cfg.ConnectTimeoutSeconds) * time.Second
 	c, err := dialer.Dial()
 	errorz.MaybeMustWrap(err, errorz.Skip())
 	errorz.IgnoreClose(c)
@@ -140,7 +148,7 @@ func SMTPInitializer(ctx context.Context) (injectz.Injector, injectz.Releaser) {
 // SESInitializer is a Mail initializer which provides a default implementation using the AWS SESv2 API.
 func SESInitializer(ctx context.Context) (injectz.Injector, injectz.Releaser) {
 	cfg := ctx.Value(mailSESConfigContextKey).(*SESConfig)
-	errorz.MaybeMustWrap(validate.Struct(cfg), errorz.Skip())
+	errorz.MaybeMustWrap(cfg.Validate(), errorz.SkipPackage())
 	awsSES := awssesv2.NewFromConfig(*cfg.AWSConfig)
 
 	return NewSingletonInjector(&mailSESImpl{sender: awsSES}), injectz.NewNoopReleaser()

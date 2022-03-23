@@ -6,13 +6,13 @@ require (
 	github.com/DusanKasan/parsemail v1.2.0
 	github.com/aws/aws-sdk-go-v2 v1.16.0
 	github.com/aws/aws-sdk-go-v2/service/sesv2 v1.13.1
-	github.com/go-playground/validator/v10 v10.10.1
 	github.com/golang/mock v1.6.0
 	github.com/ibrt/golang-bites v1.7.0
 	github.com/ibrt/golang-errors v1.1.3
 	github.com/ibrt/golang-fixtures v1.2.4
 	github.com/ibrt/golang-inject v1.1.0
 	github.com/ibrt/golang-inject-http v1.3.0
+	github.com/ibrt/golang-validation v1.0.2
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/h2non/gock.v1 v1.1.2
 	gopkg.in/mail.v2 v2.3.1
@@ -25,6 +25,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
+	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/h2non/parth v0.0.0-20190131123155-b4df798d6542 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

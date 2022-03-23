@@ -41,6 +41,8 @@ github.com/ibrt/golang-inject v1.1.0 h1:C2ChbQeLtnf4+6rKfeD7UmaZC5QusPh0aAi89/Qs
 github.com/ibrt/golang-inject v1.1.0/go.mod h1:Orii0eKaskijFl2Yl8YVVAPUxZ4r7sAKMLXcREYnedo=
 github.com/ibrt/golang-inject-http v1.3.0 h1:OVzJbB3hODDpFDOj7R8sbQnEHiHozec+KFCWyhTCKuE=
 github.com/ibrt/golang-inject-http v1.3.0/go.mod h1:H70kNedAmku5MyXDvwKDlUYKDCTVmCFcpdBPBQBozCk=
+github.com/ibrt/golang-validation v1.0.2 h1:SYOEANZjQMIqAs4NMX40wCoHF7UEM65ZcFbSV7MinGE=
+github.com/ibrt/golang-validation v1.0.2/go.mod h1:WdPIPHIm9PHNucOHnw2a+BbdPApbZOiCoXLT8ZBGjWk=
 github.com/jmespath/go-jmespath v0.4.0/go.mod h1:T8mJZnbsbmF+m6zOOFylbeCJqk5+pHWvzYPziyZiYoo=
 github.com/jmespath/go-jmespath/internal/testify v1.5.1/go.mod h1:L3OGu8Wl2/fWfCI6z80xFu9LTZmf1ZRjMHUOPmWr69U=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=

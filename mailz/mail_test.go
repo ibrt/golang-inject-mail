@@ -27,8 +27,8 @@ type Suite struct {
 
 func (s *Suite) TestSMTP(ctx context.Context, t *testing.T) {
 	ctx = mailz.NewSMTPConfigSingletonInjector(&mailz.SMTPConfig{
-		URL:              fmt.Sprintf("smtp://:password@localhost:%v", os.Getenv("MAILHOG_SMTP_PORT")),
-		ConnectTimeoutMS: 500,
+		URL:                   fmt.Sprintf("smtp://:password@localhost:%v", os.Getenv("MAILHOG_SMTP_PORT")),
+		ConnectTimeoutSeconds: 500,
 	})(ctx)
 
 	injector, releaser := mailz.SMTPInitializer(ctx)
