@@ -12,7 +12,7 @@ require (
 	github.com/ibrt/golang-errors v1.1.3
 	github.com/ibrt/golang-fixtures v1.2.4
 	github.com/ibrt/golang-inject v1.1.0
-	github.com/ibrt/golang-inject-http v1.2.0
+	github.com/ibrt/golang-inject-http v1.3.0
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/h2non/gock.v1 v1.1.2
 	gopkg.in/mail.v2 v2.3.1
