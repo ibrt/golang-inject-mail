@@ -43,12 +43,12 @@ func (c *SMTPConfig) Validate() error {
 func (c *SMTPConfig) ParseURL() (string, string, string, uint16, error) {
 	smtpURL, err := url.Parse(c.URL)
 	if err != nil {
-		return "", "", "", 0, errorz.Wrap(err, errorz.Skip())
+		return "", "", "", 0, errorz.Wrap(err, errorz.SkipPackage())
 	}
 
 	port, err := uint16z.Parse(smtpURL.Port())
 	if err != nil {
-		return "", "", "", 0, errorz.Wrap(err, errorz.Skip())
+		return "", "", "", 0, errorz.Wrap(err, errorz.SkipPackage())
 	}
 
 	password, _ := smtpURL.User.Password()
@@ -95,7 +95,7 @@ type mailSMTPImpl struct {
 
 // Send sends an email.
 func (m *mailSMTPImpl) Send(ctx context.Context, message *Message) error {
-	return errorz.MaybeWrap(m.sender.DialAndSend(message.toSMTP()), errorz.Skip())
+	return errorz.MaybeWrap(m.sender.DialAndSend(message.toSMTP()), errorz.SkipPackage())
 }
 
 // SESSender describes the ability to send mail over the AWS SESv2 API.
@@ -110,7 +110,7 @@ type mailSESImpl struct {
 // Send sends an email.
 func (m *mailSESImpl) Send(ctx context.Context, message *Message) error {
 	_, err := m.sender.SendEmail(ctx, message.toSES())
-	return errorz.MaybeWrap(err, errorz.Skip())
+	return errorz.MaybeWrap(err, errorz.SkipPackage())
 }
 
 // ContextMail describes a Mail with a cached context.
@@ -125,7 +125,7 @@ type contextMailImpl struct {
 
 // Send sends an email.
 func (m *contextMailImpl) Send(message *Message) error {
-	return errorz.MaybeWrap(m.mail.Send(m.ctx, message), errorz.Skip())
+	return errorz.MaybeWrap(m.mail.Send(m.ctx, message), errorz.SkipPackage())
 }
 
 // SMTPInitializer is a Mail initializer which provides a default implementation using SMTP.
@@ -134,12 +134,12 @@ func SMTPInitializer(ctx context.Context) (injectz.Injector, injectz.Releaser) {
 	errorz.MaybeMustWrap(cfg.Validate(), errorz.SkipPackage())
 
 	username, password, host, port, err := cfg.ParseURL()
-	errorz.MaybeMustWrap(err, errorz.Skip())
+	errorz.MaybeMustWrap(err, errorz.SkipPackage())
 
 	dialer := mail.NewDialer(host, int(port), username, password)
 	dialer.Timeout = time.Duration(cfg.ConnectTimeoutSeconds) * time.Second
 	c, err := dialer.Dial()
-	errorz.MaybeMustWrap(err, errorz.Skip())
+	errorz.MaybeMustWrap(err, errorz.SkipPackage())
 	errorz.IgnoreClose(c)
 
 	return NewSingletonInjector(&mailSMTPImpl{sender: dialer}), injectz.NewNoopReleaser()
